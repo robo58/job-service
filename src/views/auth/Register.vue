@@ -1,5 +1,10 @@
 <template>
   <div class="pa-4">
+    <div>
+      <v-alert v-model="errorAlert" border="top" color="red lighten-2" dark>
+        {{ errorMessage }}
+      </v-alert>
+    </div>
     <v-row justify="center">
       <v-col cols="12" md="6">
         <v-card>
@@ -12,12 +17,6 @@
               </v-text-field>
               <v-text-field v-model="email" label="Email" type="email" required>
               </v-text-field>
-              <v-checkbox
-                v-model="is_recruiter"
-                label="I'm a recruiter"
-                color="blue"
-                value="1"
-              ></v-checkbox>
               <v-text-field
                 v-model="password"
                 label="Password"
@@ -61,6 +60,8 @@ export default {
     is_recruiter: false,
     password: "",
     password_confirmation: "",
+    errorAlert: false,
+    errorMessage: "",
   }),
   computed: {
     checkPassword: function () {
@@ -83,8 +84,12 @@ export default {
         .then(() => {
           window.location.href = "/login";
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          this.errorAlert = true;
+          this.errorMessage = "Email is taken"
+          setTimeout(() => {
+            this.errorAlert = false
+          }, 3000);
         });
     },
   },
